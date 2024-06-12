@@ -63,10 +63,18 @@ class Author:
         return list(set(magazine_contributions))
 
     def add_article(self, magazine, title):
-        pass
+        return Article(self, magazine, title)
 
     def topic_areas(self):
-        pass
+        topic_areas = []
+
+        for magazine in self.magazines():
+            topic_areas.append(magazine.category)
+            
+        if topic_areas == []:
+            return None
+        
+        return topic_areas
 
     def __repr__(self):
         return f"{self.name}"
@@ -106,25 +114,41 @@ class Magazine:
         return total_articles
 
     def contributors(self):
-        pass
+        all_contributors = []
+        for article in self.articles():
+            all_contributors.append(article.author)
+        return list(set(all_contributors))
 
     def article_titles(self):
-        pass
+        article_titles = []
 
+        for article in self.articles():
+            article_titles.append(article.title)
+        
+        if article_titles == []:
+            return None
+
+        return article_titles
+
+    def total_contributing_authors(self):
+        authors_for_all_articles = []
+        for article in self.articles():
+            authors_for_all_articles.append(article.author)
+        authors_count = { author:authors_for_all_articles.count(author) for author in authors_for_all_articles }
+        return authors_count
+
+    
     def contributing_authors(self):
-        pass
+        top_contributors = []
+        for author, count in self.total_contributing_authors().items():
+            if count > 2:
+                top_contributors.append(author)
+        if len(top_contributors) == 0:
+            return None
+            
+        return top_contributors
+
+
 
     def __repr__(self):
         return f"Magazine: {self.name} | Category: {self.category}"
-
-eliza = Author('Eliza Cohen')
-vanity_fair = Magazine('Vanity Fair', 'Lifestyle')
-a1 = Article(eliza, vanity_fair, 'How to care for a chi')
-time = Magazine('Time', 'Events')
-a2 = Article(eliza, time, 'A Chis Rise to Fame')
-
-pistachio = Author('Pistachio')
-a3 = Article(pistachio, vanity_fair, 'Y2K Fashion from a Chis Perspective')
-a4 = Article(pistachio, time, 'Chi: Dog of the Century')
-
-print(time.articles())
